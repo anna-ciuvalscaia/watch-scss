@@ -1,0 +1,139 @@
+$dark-color: #333;
+$light-color: rgb(19, 155, 19);
+$size: 400px;
+$w: 0.2em;
+$h: 0.2em;
+
+
+@mixin auto-center {
+position: absolute;
+top: 0;
+bottom: 0;
+left: 0;
+right: 0;
+margin: auto;
+}
+
+@mixin circle($diameter,$color,$gtype:'vertical') {
+    width: $diameter;
+    height: $diameter;
+
+@if $gtype == 'vertical' {
+   background-image: linear-gradient($color, darken($color,30%), $color); 
+}
+@if $gtype == 'horizontal' {
+    background-image: linear-gradient(90deg,$color, darken($color,30%), $color); 
+ }    
+ @if $gtype == 'radial' {
+    background-image: radial-gradient(darken($color,30%), $color); 
+ }
+
+    border-radius: $diameter;
+    @include auto-center;
+}
+
+@mixin ln-big {
+    width: $w;
+    height: $h;
+    background-color: lighten($light-color, 40%);
+    margin: 10px;
+    position: absolute;
+    left: 140px;
+    transform-origin: center calc(140px);
+    filter: drop-shadow(-1px -1px 0.5px black);
+    transform: rotate(0deg);
+}
+
+@mixin arce($w,$h) {
+    width: $w;
+    height: $h;
+    border-radius: 0.25em;
+    position: absolute;
+    left: $size / 2.7;
+    transform-origin: bottom;
+    filter: drop-shadow(-1px -1px 0.5px black);
+}
+
+body {
+    background-color: $dark-color;
+}
+#watch {
+@include circle($size,$light-color);
+box-shadow: 0 0 0.33em 0.1em black ;
+
+.casing {
+    @include circle($size * 0.9, darken($light-color,20%), 'horizontal');
+    
+    @for $n from 1 through 10 {
+
+        .ring:nth-child(#{$n}){
+            $direction:'horizontal';
+            @if $n % 2==0 { $direction:'vertical'; }
+            
+            @include circle($size * (0.88 - $n * 0.01), darken($light-color,20%), $direction);
+        }
+    }
+}
+
+.screen {
+    
+    @include circle($size * 0.75, darken($light-color,20%), 'radial');
+   
+   .ln { @include ln-big; }
+
+    @for $n from 1 through 60 {
+    
+      .ln:nth-child(#{$n}) {
+      transform: rotate( 6deg * $n);
+      @if $n % 5 == 0 { height: $h * 4 ;}
+    } 
+    }
+
+    .shade {
+        width: $size * 0.75;
+        height: $size * 0.75;
+        border-radius: 100%;
+        position: relative;
+       background-image: radial-gradient( circle at top left, transparent 70%, rgba(255, 255, 255, 0.527) 80%);
+      
+    }
+    
+    .minutes {
+    @include arce($w, $h * 40);
+    border: $w  solid lighten($light-color, 40%);
+    transform: rotate(15deg);
+    top: 20px;
+    
+  }
+    .hours {
+     @include arce($w, $h * 30);
+     border: $w * 1.2  double lighten($light-color, 40%);
+     transform: rotate(65deg);
+     transform-origin: bottom;
+     top: 50px;
+  }
+
+    .center {
+        width: $w * 6;
+        height: $h * 6;
+        border-radius: 100%;
+        background-color: lighten($light-color,40%);
+        position: absolute;
+        left: 145px;
+        top: 140px;
+        box-shadow: -1px -1px 0.5px black;
+    }
+
+  h1 { 
+    color: lighten($light-color, 50%);
+    position: absolute;
+    width: inherit;
+    bottom: 40px;
+    text-align: center;
+    font-style: italic;
+    text-shadow: -1px -1px 0.5px black;
+         }  
+        }   
+        
+
+}
